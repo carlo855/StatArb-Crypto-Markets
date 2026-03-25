@@ -51,30 +51,10 @@ All parameters (signal lookbacks, thresholds, momentum windows, portfolio weight
 
 ## Known Limitations & Open Questions
 
-This is a research notebook, not a production system. Several issues remain:
-
 - **Mean reversion OOS Sharpe is implausibly high (~6).** This likely reflects survivorship bias in the coin universe — tokens that delisted or crashed to zero during the test period may be excluded from the Binance API response, inflating returns for the mean-reversion strategy that buys dips. A more rigorous backtest would need a point-in-time universe with dead coins included.
 - **Momentum degrades significantly out of sample (Sharpe ~ -2).** The momentum signal was heavily optimized in-sample (200 Bayesian iterations across 4 parameters), making it the most overfit component. The negative OOS Sharpe suggests the optimized parameters captured noise rather than structure.
 - **Transaction costs are fixed at 20 bps.** No sensitivity analysis across cost assumptions (e.g., 10/30/50 bps) is included, though this would be straightforward to add.
 - **No statistical significance testing on alpha.** The OLS regression against BTC is computed in-sample but alpha t-statistics and confidence intervals are not reported. For a strategy with this much parameter optimization, a bootstrap or block-bootstrap significance test would be more appropriate than standard OLS inference.
 - **Single cost model.** The 20 bps flat fee ignores market impact, slippage, and the fact that taker/maker fees vary across exchanges and volume tiers.
-
-## Dependencies
-
-```
-numpy
-pandas
-python-binance
-matplotlib
-statsmodels
-scikit-optimize
-```
-
-## Usage
-
-The notebook pulls live data from Binance on each run. You'll need a Binance US account (no API key required for public market data via `python-binance`). Run cells sequentially — later sections depend on objects created earlier (parameter grids, optimized weights, etc.).
-
-```bash
-pip install numpy pandas python-binance matplotlib statsmodels scikit-optimize
 jupyter notebook Statistical_Arbitrage_in_Cryptocurrencies.ipynb
 ```
